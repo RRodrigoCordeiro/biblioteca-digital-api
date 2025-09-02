@@ -24,13 +24,13 @@ export class BooksService {
     return  this.books;
   }
 
-  findOne(id: string){
-    const book =  this.books.find( book => book.id === Number(id))
+  findOne(id: number){
+    const book =  this.books.find( book => book.id === id)
 
     if(book) return book;
-     throw new HttpException("Esse livro não existe",HttpStatus.NOT_FOUND)
+    //  throw new HttpException("Esse livro não existe",HttpStatus.NOT_FOUND)
     // ir na documentação do moziila para pesquisar os status de respostas HTTP
-    // throw new NotFoundException("Essa tarefa não exite")
+     throw new NotFoundException("Essa tarefa não exite")
   }
 
   create(createBookDto: CreateBookDto){
@@ -47,8 +47,8 @@ export class BooksService {
     return newBook
   }
 
-  update(id:string, updateBookDto: UpdateBookDto){
-    const bookIndex = this.books.findIndex(book => book.id === Number(id))
+  update(id:number, updateBookDto: UpdateBookDto){
+    const bookIndex = this.books.findIndex(book => book.id === id)
 
     if(bookIndex < 0){
       throw new HttpException("Esse livro não existe",HttpStatus.NOT_FOUND)
@@ -65,8 +65,8 @@ export class BooksService {
 
   }
 
-  delete(id:string){
-    const bookIndex = this.books.findIndex(book => book.id === Number(id))
+  delete(id:number){
+    const bookIndex = this.books.findIndex(book => book.id === id)
 
     if(bookIndex < 0){
       throw new HttpException("Esse livro não existe",HttpStatus.NOT_FOUND)

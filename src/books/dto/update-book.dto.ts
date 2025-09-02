@@ -1,8 +1,5 @@
-export class UpdateBookDto{ 
-  readonly title?: string;
-  readonly author?: string;
-  readonly description?: string;
-  readonly category?: string;
-  readonly publishedYear?: number;
-  readonly available?: boolean;
-}
+import { PartialType } from "@nestjs/mapped-types";
+import { CreateBookDto } from "./create-book.dto";
+
+
+export class UpdateBookDto extends PartialType(CreateBookDto){}
