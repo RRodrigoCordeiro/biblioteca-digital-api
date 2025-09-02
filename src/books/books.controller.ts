@@ -30,9 +30,9 @@ export class BooksController {
 
   @Delete(":id")
   deleteBook(@Param("id") id: string){
-    console.log("ID ENVIADO: " + id)
 
-    return "Deletar tarefa com id" + id
+
+    return this.bookService.delete(id)
 
   }
 
