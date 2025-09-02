@@ -1,5 +1,8 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { Book } from './entities/task.entity';
+import { CreateBookDto } from './dto/create-book.dto';
+import { title } from 'process';
+import { UpdateBookDto } from './dto/update-book.dto';
 
 @Injectable()
 export class BooksService {
@@ -30,19 +33,21 @@ export class BooksService {
     // throw new NotFoundException("Essa tarefa não exite")
   }
 
-  create(body: any){
+  create(createBookDto: CreateBookDto){
     const newId = this.books.length + 1; 
-
+    
     const newBook = {
       id: newId,
-      ...body,
+      ...createBookDto,
+    
+
     }
 
     this.books.push(newBook)
     return newBook
   }
 
-  update(id:string, body: any){
+  update(id:string, updateBookDto: UpdateBookDto){
     const bookIndex = this.books.findIndex(book => book.id === Number(id))
 
     if(bookIndex < 0){
@@ -53,7 +58,7 @@ export class BooksService {
 
     this.books[bookIndex] = {
       ...bookItem,
-      ...body
+      ...updateBookDto
     }
 
     return this.books[bookIndex]
