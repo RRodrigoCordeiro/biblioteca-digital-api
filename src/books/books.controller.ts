@@ -2,14 +2,15 @@ import { Controller,Get, Param, Post, Query, Body, Patch, Delete, ParseIntPipe }
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('books')
 export class BooksController {
   constructor(private readonly bookService: BooksService){}
 
   @Get()
-  findAllBooks(){
-    return this.bookService.findAll()
+  findAllBooks(@Query() paginationDto: PaginationDto){
+    return this.bookService.findAll(paginationDto)
   }
 
   @Get(":id")

@@ -3,6 +3,7 @@ import { Book } from './entities/task.entity';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class BooksService {
@@ -21,8 +22,16 @@ export class BooksService {
     }
   ]
 
-  async findAll(){
-    const allBooks = await this.prisma.book.findMany();
+  async findAll(paginationDto: PaginationDto = new PaginationDto()){
+    const { limit = 10, offset = 0 } = paginationDto;
+
+    const allBooks = await this.prisma.book.findMany({
+      take: limit,
+      skip: offset,
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
     return allBooks
   }
 
@@ -58,9 +67,6 @@ export class BooksService {
 
     return newBook;
 
-
-
-   
   }
 
   async update(id:number, updateBookDto: UpdateBookDto){
@@ -85,11 +91,8 @@ export class BooksService {
     return book;
 
     } catch(err){
-       throw new HttpException("Falha ao atualizar essa tarefa",HttpStatus.BAD_REQUEST)
-      console.log(err)
+      throw new HttpException("Falha ao atualizar essa tarefa",HttpStatus.BAD_REQUEST)
     }
- 
-
   }
 
   async delete(id:number){
@@ -113,12 +116,9 @@ export class BooksService {
     return {
       message: "Livro deletada com sucesso!"
     }
-    } catch(err){
-     throw new HttpException("Falha ao deletar essa tatefa",HttpStatus.BAD_REQUEST)
-      console.log(err);
+    }catch(err){
+      throw new HttpException("Falha ao deletar essa tatefa",HttpStatus.BAD_REQUEST)
     }
   }
-
-
 
 }
