@@ -5,5 +5,6 @@ export class Book {
   description: string;
   category: string;
   publishedYear: number;
-  available: boolean
+  available: boolean;
+  createdAt?: Date;
 }

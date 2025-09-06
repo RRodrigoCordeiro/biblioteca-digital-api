@@ -9,7 +9,7 @@ export class BooksController {
 
   @Get()
   findAllBooks(){
-    return this.bookService.listAll()
+    return this.bookService.findAll()
   }
 
   @Get(":id")

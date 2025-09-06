@@ -1,11 +1,12 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { Book } from './entities/task.entity';
 import { CreateBookDto } from './dto/create-book.dto';
-import { title } from 'process';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class BooksService {
+  constructor(private prisma: PrismaService){}
 
   private books: Book[] = [
     {
@@ -20,8 +21,9 @@ export class BooksService {
     }
   ]
 
-  listAll(){
-    return  this.books;
+  async findAll(){
+    const allBooks = await this.prisma.book.findMany();
+    return allBooks
   }
 
   findOne(id: number){
