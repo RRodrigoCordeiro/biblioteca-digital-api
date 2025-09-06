@@ -26,60 +26,97 @@ export class BooksService {
     return allBooks
   }
 
-  findOne(id: number){
-    const book =  this.books.find( book => book.id === id)
+  async findOne(id: number){
+    const book = await this.prisma.book.findFirst({
+      where: {
+        id: id
+      }
+    })
 
-    if(book) return book;
-    //  throw new HttpException("Esse livro não existe",HttpStatus.NOT_FOUND)
-    // ir na documentação do moziila para pesquisar os status de respostas HTTP
-     throw new NotFoundException("Essa tarefa não exite")
+    if(book?.title) return book;
+
+    throw new HttpException("Esse livro não foi encontrado!",HttpStatus.NOT_FOUND)
+
+    // //  throw new HttpException("Esse livro não existe",HttpStatus.NOT_FOUND)
+    // // ir na documentação do moziila para pesquisar os status de respostas HTTP
+    //  throw new NotFoundException("Essa tarefa não exite")
   }
 
-  create(createBookDto: CreateBookDto){
-    const newId = this.books.length + 1; 
+  async create(createBookDto: CreateBookDto){
+     console.log(typeof createBookDto.publishedYear); 
+     console.log(typeof createBookDto.available);  
+    const newBook = await this.prisma.book.create({
+      data:{
+        title: createBookDto.title,
+        author: createBookDto.author,
+        description: createBookDto.description,
+        category: createBookDto.category,
+        publishedYear: createBookDto.publishedYear,
+        available: createBookDto.available,
+      }
+    })
+
+    return newBook;
+
+
+
+   
+  }
+
+  async update(id:number, updateBookDto: UpdateBookDto){
+    try{
+      const findBook = await this.prisma.book.findFirst({
+      where:{
+        id: id
+      }
+    })
+
+    if(!findBook){
+      throw new HttpException("Esse livro não existe!",HttpStatus.NOT_FOUND)
+    }
+
+    const book = await this.prisma.book.update({
+      where:{
+        id: findBook.id
+      },
+      data:updateBookDto
+    })
+
+    return book;
+
+    } catch(err){
+       throw new HttpException("Falha ao atualizar essa tarefa",HttpStatus.BAD_REQUEST)
+      console.log(err)
+    }
+ 
+
+  }
+
+  async delete(id:number){
+    try{
+      const findBook = await this.prisma.book.findFirst({
+      where:{
+        id: id
+      }
+    })
     
-    const newBook = {
-      id: newId,
-      ...createBookDto,
-    
-
+    if(!findBook){
+      throw new HttpException("Essa tarefa não existe",HttpStatus.NOT_FOUND)
     }
 
-    this.books.push(newBook)
-    return newBook
-  }
-
-  update(id:number, updateBookDto: UpdateBookDto){
-    const bookIndex = this.books.findIndex(book => book.id === id)
-
-    if(bookIndex < 0){
-      throw new HttpException("Esse livro não existe",HttpStatus.NOT_FOUND)
-    }
-
-    const bookItem = this.books[bookIndex]
-
-    this.books[bookIndex] = {
-      ...bookItem,
-      ...updateBookDto
-    }
-
-    return this.books[bookIndex]
-
-  }
-
-  delete(id:number){
-    const bookIndex = this.books.findIndex(book => book.id === id)
-
-    if(bookIndex < 0){
-      throw new HttpException("Esse livro não existe",HttpStatus.NOT_FOUND)
-    }
-
-    this.books.splice(bookIndex,1)
+    await this.prisma.book.delete({
+      where: {
+        id: findBook.id
+      }
+    })
 
     return {
-      message: "Tarefa excluida com sucesso!"
+      message: "Livro deletada com sucesso!"
     }
-
+    } catch(err){
+     throw new HttpException("Falha ao deletar essa tatefa",HttpStatus.BAD_REQUEST)
+      console.log(err);
+    }
   }
 
 

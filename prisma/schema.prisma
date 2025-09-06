@@ -21,8 +21,8 @@ model Book {
   author  String
   description  String
   category  String
-  publishedYear  String
-  available  String
+  publishedYear  Int
+  available  Int
   createdAt  DateTime? @default(now())
  
 }

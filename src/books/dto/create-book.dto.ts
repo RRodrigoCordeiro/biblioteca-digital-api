@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import { IsBoolean, IsNotEmpty, IsNumber, IsString,  MinLength } from "class-validator";
 
 export class CreateBookDto{
@@ -22,12 +23,13 @@ export class CreateBookDto{
   readonly category: string;
 
   @IsNumber()
-
+  @Type(() => Number)
   @IsNotEmpty()
   readonly publishedYear: number;
 
 
-  @IsBoolean()
+  @IsNumber()
+  @Type(() => Number)
   @IsNotEmpty()
-  readonly available: boolean;
+  readonly available: number;
 }
