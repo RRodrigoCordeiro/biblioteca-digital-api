@@ -9,19 +9,6 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 export class BooksService {
   constructor(private prisma: PrismaService){}
 
-  private books: Book[] = [
-    {
-      id: 1,
-      title: "A Revolução dos Bichos",
-      author: "George Orwell",
-      description: "Uma fábula sobre uma revolta animal que se transforma em uma distopia",
-      category: "Ficção",
-      publishedYear: 1945,
-      available: true
-
-    }
-  ]
-
   async findAll(paginationDto: PaginationDto = new PaginationDto()){
     const { limit = 10, offset = 0 } = paginationDto;
 
