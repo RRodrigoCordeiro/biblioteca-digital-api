@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 // Buscar os etalhes de 1 usuario
 // cadastrar usuario
@@ -17,8 +18,11 @@ export class UsersController {
 
   @Post()
   createUser(@Body() createUserDto: CreateUserDto){
-    console.log(createUserDto)
-    return "ok"
+    return this.userService.create(createUserDto)
+  }
 
+  @Patch(":id")
+  upgrade(@Param("id",  ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto){
+    return this.userService.upgrade(id, updateUserDto)
   }
 }

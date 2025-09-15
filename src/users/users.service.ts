@@ -1,27 +1,82 @@
 import { Body, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma:PrismaService){}
-  
-  async findOne(id: number){
+  constructor(private prisma: PrismaService) {}
+
+  async findOne(id: number) {
     const user = await this.prisma.user.findFirst({
       where: {
         id: id,
-      }
-    })
-     
-    if(user) return user;
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+      },
+    });
 
-    throw new HttpException("Usuário não encontrado!",HttpStatus.BAD_REQUEST);
+    if (user) return user;
+
+    throw new HttpException('Usuário não encontrado!', HttpStatus.BAD_REQUEST);
   }
 
-  // async create(@Body){
-  //   const create = await this.prisma.user.findFirst({
-  //     where:{
-  //       id: id
-  //     }
-  //   })
-  // }
+  async create(createUserDto: CreateUserDto) {
+    try {
+      const newUser = await this.prisma.user.create({
+        data: {
+          name: createUserDto.name,
+          email: createUserDto.email,
+          passwordHash: createUserDto.password,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      });
+
+      return newUser;
+    } catch (err) {
+      console.log(err);
+      throw new HttpException('Falha ao cadastrar usuário!', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async upgrade(id: number, updateUserDto: UpdateUserDto) {
+    try {
+      const user = await this.prisma.user.findFirst({
+        where: {
+          id: id,
+        },
+      });
+
+      if (!user) {
+        throw new HttpException('Usuário não existe!', HttpStatus.BAD_REQUEST);
+      }
+
+      const updateUser = await this.prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          name: updateUserDto.name ? updateUserDto.name : user.name,
+          passwordHash: updateUserDto.password ? updateUserDto.password : user.passwordHash,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      });
+
+      return updateUser;
+    } catch (err) {
+      console.log(err);
+      throw new HttpException('Falha ao atualizar usuário!',HttpStatus.BAD_REQUEST);
+    }
+  }
 }
