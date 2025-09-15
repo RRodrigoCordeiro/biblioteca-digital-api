@@ -16,13 +16,23 @@ datasource db {
 
 
 model Book {
-  id Int @id @default(autoincrement())
-  title  String
-  author  String
-  description  String
-  category  String
+  id             Int @id @default(autoincrement())
+  title          String
+  author         String
+  description    String
+  category       String
   publishedYear  Int
-  available  Int
-  createdAt  DateTime? @default(now())
- 
+  available      Int
+  createdAt      DateTime? @default(now())
+  userId         Int?
+  user User? @relation(fields: [userId], references: [id],onDelete: Cascade)  
+}
+
+model User{
+  id           Int @id @default(autoincrement())
+  name         String
+  passwordHash String
+  email        String @unique
+  createdAt    DateTime? @default(now())
+  Book Book[]
 }
