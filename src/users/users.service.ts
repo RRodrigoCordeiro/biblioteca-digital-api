@@ -16,6 +16,7 @@ export class UsersService {
         id: true,
         email: true,
         name: true,
+        Book: true,
       },
     });
 
@@ -77,6 +78,33 @@ export class UsersService {
     } catch (err) {
       console.log(err);
       throw new HttpException('Falha ao atualizar usuário!',HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async delete(id:number){
+    try{
+      const user = await this.prisma.user.findFirst({
+        where: {
+          id: id
+        }
+      })
+
+      if(!user) throw new HttpException('Usuário não existe!', HttpStatus.BAD_REQUEST);
+
+      await this.prisma.user.delete({
+        where: {
+          id: user.id
+        }
+      })
+
+      return {
+        message: "Usuário foi deletado com suesso!"
+      }
+
+
+    } catch(err){
+      console.log(err);
+      throw new HttpException('Falha ao deletar usuário!', HttpStatus.BAD_REQUEST);
     }
   }
 }

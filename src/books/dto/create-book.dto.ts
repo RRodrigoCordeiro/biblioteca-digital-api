@@ -32,4 +32,10 @@ export class CreateBookDto{
   @Type(() => Number)
   @IsNotEmpty()
   readonly available: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  readonly userId: number;
+
+
 }
