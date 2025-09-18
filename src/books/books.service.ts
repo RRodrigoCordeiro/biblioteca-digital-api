@@ -36,10 +36,7 @@ export class BooksService {
 
     if (book?.title) return book;
 
-    throw new HttpException(
-      'Esse livro não foi encontrado!',
-      HttpStatus.NOT_FOUND,
-    );
+    throw new HttpException('Tarefa não foi encontrada',HttpStatus.NOT_FOUND);
 
     // //  throw new HttpException("Esse livro não existe",HttpStatus.NOT_FOUND)
     // // ir na documentação do moziila para pesquisar os status de respostas HTTP
