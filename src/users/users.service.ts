@@ -43,7 +43,7 @@ export class UsersService {
       return newUser;
     } catch (err) {
       console.log(err);
-      throw new HttpException('Falha ao cadastrar usuário!', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Falha ao cadastrar usuário!',HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -65,7 +65,9 @@ export class UsersService {
         },
         data: {
           name: updateUserDto.name ? updateUserDto.name : user.name,
-          passwordHash: updateUserDto.password ? updateUserDto.password : user.passwordHash,
+          passwordHash: updateUserDto.password
+            ? updateUserDto.password
+            : user.passwordHash,
         },
         select: {
           id: true,
@@ -77,34 +79,33 @@ export class UsersService {
       return updateUser;
     } catch (err) {
       console.log(err);
-      throw new HttpException('Falha ao atualizar usuário!',HttpStatus.BAD_REQUEST);
+      throw new HttpException('Falha ao atualizar usuário!',HttpStatus.BAD_REQUEST,);
     }
   }
 
-  async delete(id:number){
-    try{
+  async delete(id: number) {
+    try {
       const user = await this.prisma.user.findFirst({
         where: {
-          id: id
-        }
-      })
+          id: id,
+        },
+      });
 
-      if(!user) throw new HttpException('Usuário não existe!', HttpStatus.BAD_REQUEST);
+      if (!user)
+        throw new HttpException('Usuário não existe!', HttpStatus.BAD_REQUEST);
 
       await this.prisma.user.delete({
         where: {
-          id: user.id
-        }
-      })
+          id: user.id,
+        },
+      });
 
       return {
-        message: "Usuário foi deletado com suesso!"
-      }
-
-
-    } catch(err){
+        message: 'Usuário foi deletado com suesso!',
+      };
+    } catch (err) {
       console.log(err);
-      throw new HttpException('Falha ao deletar usuário!', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Falha ao deletar usuário!',HttpStatus.BAD_REQUEST);
     }
   }
 }
