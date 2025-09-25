@@ -1,4 +1,4 @@
-import { Controller,Get, Param, Post, Query, Body, Patch, Delete, ParseIntPipe, UseInterceptors } from '@nestjs/common';
+import { Controller,Get, Param, Post, Query, Body, Patch, Delete, ParseIntPipe, UseInterceptors, UseGuards } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
@@ -6,9 +6,13 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { LoggerInterceptor } from 'src/common/interceptors/logger.interceptor';
 import { BodyCreateBookInterceptor } from 'src/common/interceptors/body-create-book.interceptor';
 import { ResponseIterceptor } from 'src/common/interceptors/response.interceptor';
+import { AuthAdminGuard } from 'src/common/guards/admin.guard';
 
 @UseInterceptors(ResponseIterceptor)
 @Controller('books')
+@UseGuards(AuthAdminGuard)
+
+// detro de um enpoint expecifivo,dentro doappmodule ou detro do controller
 export class BooksController {
   constructor(private readonly bookService: BooksService){}
 

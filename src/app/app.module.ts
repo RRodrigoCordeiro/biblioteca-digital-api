@@ -9,8 +9,9 @@ import { AppService } from './app.service';
 import { BooksModule } from 'src/books/books.module';
 import { UsersModule } from 'src/users/users.module';
 import { LoggerMiddleware } from 'src/common/middlewares/logger.middleware';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { ApiExceptionFilter } from 'src/common/filters/expection-filter';
+import { AuthAdminGuard } from 'src/common/guards/admin.guard';
 
 @Module({
   imports: [BooksModule, UsersModule],
@@ -21,6 +22,10 @@ import { ApiExceptionFilter } from 'src/common/filters/expection-filter';
       provide: APP_FILTER,
       useClass: ApiExceptionFilter,
     },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: AuthAdminGuard
+    // }
   ],
 })
 export class AppModule implements NestModule {
