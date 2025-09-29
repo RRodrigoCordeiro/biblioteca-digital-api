@@ -14,7 +14,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Book {
   id             Int @id @default(autoincrement())
   title          String
@@ -26,6 +25,7 @@ model Book {
   createdAt      DateTime? @default(now())
   userId         Int?
   user User? @relation(fields: [userId], references: [id],onDelete: Cascade)  
+  loans Loan[]
 }
 
 model User{
@@ -35,4 +35,17 @@ model User{
   email        String @unique
   createdAt    DateTime? @default(now())
   Book Book[]
+  loans Loan[] 
+}
+
+model Loan {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  bookId    Int
+  startDate DateTime @default(now())
+  endDate   DateTime?
+  returned  Boolean  @default(false)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
 }

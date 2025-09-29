@@ -13,12 +13,14 @@ import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { ApiExceptionFilter } from 'src/common/filters/expection-filter';
 import { AuthAdminGuard } from 'src/common/guards/admin.guard';
 import { ConfigModule } from '@nestjs/config';
+import { LoansModule } from 'src/loans/loans.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     BooksModule, 
-    UsersModule
+    UsersModule,
+    LoansModule,
   ],
   controllers: [AppController],
   providers: [
