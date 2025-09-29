@@ -12,9 +12,14 @@ import { LoggerMiddleware } from 'src/common/middlewares/logger.middleware';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { ApiExceptionFilter } from 'src/common/filters/expection-filter';
 import { AuthAdminGuard } from 'src/common/guards/admin.guard';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [BooksModule, UsersModule],
+  imports: [
+    ConfigModule.forRoot(),
+    BooksModule, 
+    UsersModule
+  ],
   controllers: [AppController],
   providers: [
     AppService,

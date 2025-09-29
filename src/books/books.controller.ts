@@ -1,4 +1,4 @@
-import { Controller,Get, Param, Post, Query, Body, Patch, Delete, ParseIntPipe, UseInterceptors, UseGuards } from '@nestjs/common';
+import { Controller,Get, Param, Post, Query, Body, Patch, Delete, ParseIntPipe, UseInterceptors, UseGuards, Inject } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
@@ -12,13 +12,18 @@ import { AuthAdminGuard } from 'src/common/guards/admin.guard';
 @Controller('books')
 @UseGuards(AuthAdminGuard)
 
-// detro de um enpoint expecifivo,dentro doappmodule ou detro do controller
+
 export class BooksController {
-  constructor(private readonly bookService: BooksService){}
+  constructor(private readonly bookService: BooksService,
+
+  @Inject("KEY_TOKEN")
+   private readonly keyToken: string 
+  ){}
 
   @Get()
   @UseInterceptors(LoggerInterceptor)
   findAllBooks(@Query() paginationDto: PaginationDto){
+    // console.log(this.keyToken)
     return this.bookService.findAll(paginationDto)
   }
 
