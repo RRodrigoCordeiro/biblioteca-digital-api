@@ -16,7 +16,10 @@ export class UsersService {
         id: true,
         email: true,
         name: true,
+        role: true,
         Book: true,
+        loans: true
+
       },
     });
 
@@ -37,6 +40,7 @@ export class UsersService {
           id: true,
           name: true,
           email: true,
+          role: true
         },
       });
 
