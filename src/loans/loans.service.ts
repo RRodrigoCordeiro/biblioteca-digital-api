@@ -1,25 +1,33 @@
 import {
   Injectable,
-  BadRequestException,
-  NotFoundException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class LoanService {
   constructor(private prisma: PrismaService) {}
 
   async createLoan(userId: number, bookId: number) {
-    const book = await this.prisma.book.findUnique({ where: { id: bookId } });
+    const book = await this.prisma.book.findUnique({ 
+      where: {
+         id: userId,
+        } 
+      });
 
-    if (!book) throw new NotFoundException('Livro não encontrado');
-    if (book.available < 1)
-      throw new BadRequestException('Livro indisponível no momento');
+    if (!book) throw new HttpException('Usuário não encontrado!', HttpStatus.BAD_REQUEST);
+   
+    if (book.available < 1) throw new HttpException('Livro indisponível no momento!',HttpStatus.BAD_REQUEST);
+  
 
     await this.prisma.book.update({
-      where: { id: bookId },
-      data: { available: { decrement: 1 } },
+      where: {
+        id: bookId 
+      },
+      data: { 
+        available: { decrement: 1 }
+      },
     });
 
     return this.prisma.loan.create({
@@ -30,14 +38,17 @@ export class LoanService {
     });
   }
 
-  async returnLoan(loanId: number) {
-    const loan = await this.prisma.loan.findUnique({ where: { id: loanId } });
+  async returnLoan(id: number) {
+    const loan = await this.prisma.loan.findUnique({ where: { id: id } });
 
-    if (!loan) throw new NotFoundException('Empréstimo não encontrado');
-    if (loan.returned) throw new BadRequestException('Livro já devolvido');
+    if (!loan)  throw new HttpException('Empréstimo não encontrado!', HttpStatus.BAD_REQUEST);
+
+    if (loan.returned) throw new HttpException('Livro já devolvido!', HttpStatus.BAD_REQUEST); 
 
     await this.prisma.loan.update({
-      where: { id: loanId },
+      where: { 
+        id: id 
+      },
       data: {
         returned: true,
         endDate: new Date(),
@@ -45,16 +56,21 @@ export class LoanService {
     });
 
     await this.prisma.book.update({
-      where: { id: loan.bookId },
+      where: {
+        id: loan.bookId
+      },
       data: { available: { increment: 1 } },
     });
 
     return { message: 'Livro devolvido com sucesso' };
   }
 
+
   async getUserLoans(userId: number) {
     return await this.prisma.loan.findMany({
-      where: { userId },
+      where: {
+        userId 
+      },
       include: { book: true },
     });
   }

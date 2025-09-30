@@ -13,7 +13,6 @@ import { LoanService } from './loans.service';
 export class LoanController {
   constructor(private loanService: LoanService) {}
 
-  
   @Post()
   createLoan(
     @Body('userId', ParseIntPipe) userId: number,
@@ -22,13 +21,11 @@ export class LoanController {
     return this.loanService.createLoan(userId, bookId);
   }
 
-  
-  @Patch(':id/return')
-  returnLoan(@Param('id', ParseIntPipe) loanId: number) {
-    return this.loanService.returnLoan(loanId);
+  @Patch('return/:id')
+  returnLoan(@Param('id', ParseIntPipe) id: number) {
+    return this.loanService.returnLoan(id);
   }
 
-   
   @Get('user/:userId')
   getUserLoans(@Param('userId', ParseIntPipe) userId: number) {
     return this.loanService.getUserLoans(userId);

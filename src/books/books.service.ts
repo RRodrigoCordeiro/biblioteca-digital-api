@@ -28,7 +28,7 @@ export class BooksService {
   }
 
   async findOne(id: number) {
-    const book = await this.prisma.book.findFirst({
+    const book = await this.prisma.book.findUnique({
       where: {
         id: id,
       },
@@ -66,7 +66,7 @@ export class BooksService {
 
   async update(id: number, updateBookDto: UpdateBookDto) {
     try {
-      const findBook = await this.prisma.book.findFirst({
+      const findBook = await this.prisma.book.findUnique({
         where: {
           id: id,
         },
@@ -102,7 +102,7 @@ export class BooksService {
 
   async delete(id: number) {
     try {
-      const findBook = await this.prisma.book.findFirst({
+      const findBook = await this.prisma.book.findUnique({
         where: {
           id: id,
         },
