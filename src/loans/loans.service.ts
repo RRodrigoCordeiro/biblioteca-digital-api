@@ -4,15 +4,16 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { CreateLoansDto } from './dto/create-loans.dto';
 
 @Injectable()
 export class LoanService {
   constructor(private prisma: PrismaService) {}
 
-  async createLoan(userId: number, bookId: number) {
+  async createLoan(createLoansDto: CreateLoansDto) {
     const book = await this.prisma.book.findUnique({ 
       where: {
-         id: userId,
+         id: createLoansDto.bookId,
         } 
       });
 
@@ -23,7 +24,7 @@ export class LoanService {
 
     await this.prisma.book.update({
       where: {
-        id: bookId 
+        id: createLoansDto.bookId 
       },
       data: { 
         available: { decrement: 1 }
@@ -32,8 +33,8 @@ export class LoanService {
 
     return this.prisma.loan.create({
       data: {
-        userId,
-        bookId,
+        userId: createLoansDto.userId,
+        bookId: createLoansDto.bookId,
       },
     });
   }
