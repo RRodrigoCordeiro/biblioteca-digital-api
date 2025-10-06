@@ -12,15 +12,10 @@ export class UsersService {
       where: {
         id: id,
       },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
+      include:{
         Book: true,
         loans: true
-
-      },
+      }
     });
 
     if (user) return user;
