@@ -40,4 +40,9 @@ export class UsersController {
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.userService.delete(id);
   }
+
+  @Post('upload')
+  uploadAvatar(){
+    return true
+  }
 }
