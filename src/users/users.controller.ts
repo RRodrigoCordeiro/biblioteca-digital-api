@@ -11,12 +11,18 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ApiOperation, ApiParam} from '@nestjs/swagger';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
   @Get(':id')
+   @ApiOperation({summary: 'Buscar um usuário'})
+    @ApiParam({
+    name: 'id',
+    description: "ID do usuário"
+   })
   findOneUser(@Param('id', ParseIntPipe) id: number) {
     console.log('Token teste: ', process.env.TOKEN_KEY);
 
@@ -24,11 +30,17 @@ export class UsersController {
   }
 
   @Post()
+   @ApiOperation({summary: 'Cadastrar um usuário'})
   createUser(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
   @Patch(':id')
+   @ApiOperation({summary: 'Editar um usuário'})
+      @ApiParam({
+    name: 'id',
+    description: "ID do usuário"
+   })
   upgrade(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
@@ -37,6 +49,11 @@ export class UsersController {
   }
 
   @Delete(':id')
+   @ApiOperation({summary: 'Deletar um usuário'})
+    @ApiParam({
+    name: 'id',
+    description: "ID do usuário"
+   })
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.userService.delete(id);
   }
