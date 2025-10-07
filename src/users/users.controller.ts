@@ -7,15 +7,22 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiParam} from '@nestjs/swagger';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
+
+  @Get()
+  findAllUsers(@Query() paginationDto: PaginationDto){
+    return this.userService.findAll(paginationDto)
+  }
 
   @Get(':id')
    @ApiOperation({summary: 'Buscar um usuário'})
@@ -25,7 +32,6 @@ export class UsersController {
    })
   findOneUser(@Param('id', ParseIntPipe) id: number) {
     console.log('Token teste: ', process.env.TOKEN_KEY);
-
     return this.userService.findOne(id);
   }
 

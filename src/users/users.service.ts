@@ -2,10 +2,25 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
+
+   async findAll(paginationDto: PaginationDto = new PaginationDto()) {
+      const { limit = 10, offset = 0 } = paginationDto;
+  
+      const allUsers = await this.prisma.user.findMany({
+        take: limit,
+        skip: offset,
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+      return allUsers;
+    }
+  
 
   async findOne(id: number) {
     const user = await this.prisma.user.findUnique({

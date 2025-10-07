@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: banco-postgres-compose
+    restart: always
+    environment:
+      POSTGRES_USER: users
+      POSTGRES_PASSWORD: users
+      POSTGRES_DB: biblioteca
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d
+
+volumes:
+  postgres_data:
