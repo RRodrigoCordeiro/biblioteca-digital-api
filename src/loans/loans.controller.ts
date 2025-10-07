@@ -34,7 +34,7 @@ export class LoanController {
   }
 
   @Get('user/:userId')
-  @ApiOperation({ summary: 'Buscar o emprestimo do usuário' })
+  @ApiOperation({ summary: 'Buscar o empréstimo do usuário' })
   @ApiParam({
     name: 'id',
     description: 'ID do usuário',
@@ -44,11 +44,13 @@ export class LoanController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Buscar todos os empréstimos' })
   async getAllLoans() {
     return this.loanService.findAllLoans();
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Deletar o empréstimo' })
   deleteLoans(@Param('id', ParseIntPipe) id: number) {
     return this.loanService.delete(id);
   }

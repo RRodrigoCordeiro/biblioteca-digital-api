@@ -20,6 +20,7 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
+  @ApiOperation({ summary: 'Buscar todos os usuários' })
   @Get()
   findAllUsers(@Query() paginationDto: PaginationDto) {
     return this.userService.findAll(paginationDto);
