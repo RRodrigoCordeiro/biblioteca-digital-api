@@ -11,6 +11,7 @@ import {
   UseInterceptors,
   UseGuards,
   Inject,
+  Put,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -78,7 +79,7 @@ export class BooksController {
     return this.bookService.create(createBookDto);
   }
 
-  @Patch(':id')
+  @Put(':id')
   @ApiOperation({ summary: 'Editar um livro' })
   @ApiParam({
     name: 'id',
