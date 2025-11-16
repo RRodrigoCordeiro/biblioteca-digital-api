@@ -3,10 +3,14 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { HashingServiceProtocol } from 'src/auth/hash/hashing.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly hashingService: HashingServiceProtocol
+  ) {}
 
    async findAll(paginationDto: PaginationDto = new PaginationDto()) {
       const { limit = 10, offset = 0 } = paginationDto;
@@ -40,11 +44,13 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     try {
+      const passwordHash = await this.hashingService.hash(createUserDto.password)
+
       const newUser = await this.prisma.user.create({
         data: {
           name: createUserDto.name,
           email: createUserDto.email,
-          passwordHash: createUserDto.password,
+          passwordHash: passwordHash,
         },
         select: {
           id: true,
@@ -73,15 +79,23 @@ export class UsersService {
         throw new HttpException('Usuário não existe!', HttpStatus.BAD_REQUEST);
       }
 
+      const dataUser: { name?: string, passwordHash?: string } = {
+        name: updateUserDto.name ? updateUserDto.name : user.name,
+      };
+
+      if(updateUserDto?.password){
+        const passwordHash = await this.hashingService.hash(updateUserDto?.password)
+        dataUser['passwordHash'] = passwordHash;
+      }
+
       const updateUser = await this.prisma.user.update({
         where: {
           id: user.id,
         },
         data: {
-          name: updateUserDto.name ? updateUserDto.name : user.name,
-          passwordHash: updateUserDto.password
-            ? updateUserDto.password
-            : user.passwordHash,
+          name: dataUser.name,
+          passwordHash: dataUser?.passwordHash ? dataUser.passwordHash : user.passwordHash,
+          
         },
         select: {
           id: true,

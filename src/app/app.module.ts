@@ -14,6 +14,7 @@ import { ApiExceptionFilter } from 'src/common/filters/expection-filter';
 import { AuthAdminGuard } from 'src/common/guards/admin.guard';
 import { ConfigModule } from '@nestjs/config';
 import { LoansModule } from 'src/loans/loans.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { LoansModule } from 'src/loans/loans.module';
     BooksModule, 
     UsersModule,
     LoansModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [
