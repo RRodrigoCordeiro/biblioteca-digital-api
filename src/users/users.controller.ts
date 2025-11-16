@@ -9,12 +9,17 @@ import {
   Post,
   Put,
   Query,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiParam } from '@nestjs/swagger';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { AuthTokenGuard } from 'src/auth/guard/auth-token.guard';
+import { REQUEST_TOKEN_PAYLOAD_KEY } from 'src/auth/common/auth.constants';
+ 
 
 @Controller('users')
 export class UsersController {
@@ -43,6 +48,7 @@ export class UsersController {
     return this.userService.create(createUserDto);
   }
 
+  @UseGuards(AuthTokenGuard)
   @Put(':id')
   @ApiOperation({ summary: 'Editar um usuário' })
   @ApiParam({
@@ -52,7 +58,10 @@ export class UsersController {
   upgrade(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
+    @Req() req: Request,
   ) {
+
+    console.log("ID user: ", req[REQUEST_TOKEN_PAYLOAD_KEY]?.sub)
     return this.userService.upgrade(id, updateUserDto);
   }
 
