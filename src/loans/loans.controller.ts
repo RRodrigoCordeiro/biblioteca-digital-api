@@ -7,20 +7,28 @@ import {
   Get,
   Delete,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { LoanService } from './loans.service';
 import { CreateLoansDto } from './dto/create-loans.dto';
 import { ApiOperation, ApiParam } from '@nestjs/swagger';
 import { UpdateLoanDto } from './dto/update-loans.dto';
+import { TokenPayloadParam } from 'src/auth/param/token-payload.param';
+import { PayloadTokenDto } from 'src/auth/dto/payload-token.dto';
+import { AuthTokenGuard } from 'src/auth/guard/auth-token.guard';
 
 @Controller('loans')
+@UseGuards(AuthTokenGuard)
 export class LoanController {
   constructor(private loanService: LoanService) {}
 
   @Post()
   @ApiOperation({ summary: 'Cadastrar um emprestimo' })
-  createLoan(@Body() createLoansDto: CreateLoansDto) {
-    return this.loanService.createLoan(createLoansDto);
+  createLoan(
+    @Body() createLoansDto: CreateLoansDto,
+     @TokenPayloadParam() tokenPayLoad: PayloadTokenDto
+  ) {
+    return this.loanService.createLoan(createLoansDto,tokenPayLoad);
   }
 
   @Get('return/:id')

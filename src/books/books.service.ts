@@ -9,6 +9,7 @@ import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PayloadTokenDto } from 'src/auth/dto/payload-token.dto';
 
 @Injectable()
 export class BooksService {
@@ -43,7 +44,8 @@ export class BooksService {
     //  throw new NotFoundException("Essa tarefa não exite")
   }
 
-  async create(createBookDto: CreateBookDto) {
+  async create(createBookDto: CreateBookDto,tokenPayLoad: PayloadTokenDto) {
+     
     try {
       const newBook = await this.prisma.book.create({
         data: {
@@ -53,7 +55,7 @@ export class BooksService {
           category: createBookDto.category,
           publishedYear: createBookDto.publishedYear,
           available: createBookDto.available,
-          userId: createBookDto.userId,
+          userId: tokenPayLoad.sub,
         },
       });
 

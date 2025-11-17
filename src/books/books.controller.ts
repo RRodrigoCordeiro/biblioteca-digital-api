@@ -27,10 +27,14 @@ import {
   ApiParam,
   ApiQuery,
 } from '@nestjs/swagger';
+import { AuthTokenGuard } from 'src/auth/guard/auth-token.guard';
+import { TokenPayloadParam } from 'src/auth/param/token-payload.param';
+import { PayloadTokenDto } from 'src/auth/dto/payload-token.dto';
 
 @UseInterceptors(ResponseIterceptor)
 @Controller('books')
-@UseGuards(AuthAdminGuard)
+@UseGuards(AuthTokenGuard)
+
 @ApiBearerAuth()
 export class BooksController {
   constructor(
@@ -40,8 +44,10 @@ export class BooksController {
     private readonly keyToken: string,
   ) {}
 
+
+ 
   @Get()
-  @UseInterceptors(LoggerInterceptor)
+  // @UseInterceptors(LoggerInterceptor)
   @ApiOperation({ summary: 'Buscar todos os livros' })
   @ApiQuery({
     name: 'limit',
@@ -60,6 +66,7 @@ export class BooksController {
     return this.bookService.findAll(paginationDto);
   }
 
+  
   @Get(':id')
   @ApiOperation({ summary: 'Buscar um livro' })
   @ApiParam({
@@ -71,14 +78,20 @@ export class BooksController {
     return this.bookService.findOne(id);
   }
 
+   
   @Post()
   @ApiOperation({ summary: 'Cadastrar um livro' })
-  @UseInterceptors(BodyCreateBookInterceptor)
-  createBook(@Body() createBookDto: CreateBookDto) {
-    console.log(createBookDto);
-    return this.bookService.create(createBookDto);
-  }
+  // @UseInterceptors(BodyCreateBookInterceptor)
+  createBook(
+    @Body() createBookDto: CreateBookDto,
+    @TokenPayloadParam() tokenPayLoad: PayloadTokenDto
 
+  ) {
+   console.log('tokenPayLoad:', tokenPayLoad);
+
+    return this.bookService.create(createBookDto, tokenPayLoad);
+  }
+ 
   @Put(':id')
   @ApiOperation({ summary: 'Editar um livro' })
   @ApiParam({
@@ -91,7 +104,7 @@ export class BooksController {
   ) {
     return this.bookService.update(id, updateBookDto);
   }
-
+ 
   @ApiOperation({ summary: 'Excluir um livro' })
   @Delete(':id')
   deleteBook(@Param('id', ParseIntPipe) id: number) {

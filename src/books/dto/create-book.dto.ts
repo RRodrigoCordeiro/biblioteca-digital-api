@@ -33,9 +33,7 @@ export class CreateBookDto{
   @IsNotEmpty()
   readonly available: number;
 
-  @IsNumber()
-  @IsNotEmpty()
-  readonly userId: number;
+ 
 
 
 }

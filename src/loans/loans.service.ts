@@ -2,12 +2,13 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateLoansDto } from './dto/create-loans.dto';
 import { UpdateLoanDto } from './dto/update-loans.dto';
+import { PayloadTokenDto } from 'src/auth/dto/payload-token.dto';
 
 @Injectable()
 export class LoanService {
   constructor(private prisma: PrismaService) {}
 
-  async createLoan(createLoansDto: CreateLoansDto) {
+  async createLoan(createLoansDto: CreateLoansDto,tokenPayLoad: PayloadTokenDto) {
     const book = await this.prisma.book.findUnique({
       where: {
         id: createLoansDto.bookId,
@@ -37,7 +38,7 @@ export class LoanService {
 
     return this.prisma.loan.create({
       data: {
-        userId: createLoansDto.userId,
+        userId: tokenPayLoad.sub,
         bookId: createLoansDto.bookId,
       },
     });

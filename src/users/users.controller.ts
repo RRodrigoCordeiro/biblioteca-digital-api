@@ -18,7 +18,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiParam } from '@nestjs/swagger';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { AuthTokenGuard } from 'src/auth/guard/auth-token.guard';
-import { REQUEST_TOKEN_PAYLOAD_KEY } from 'src/auth/common/auth.constants';
+import { TokenPayloadParam } from 'src/auth/param/token-payload.param';
+import { PayloadTokenDto } from 'src/auth/dto/payload-token.dto';
  
 
 @Controller('users')
@@ -58,10 +59,10 @@ export class UsersController {
   upgrade(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
-    @Req() req: Request,
+    @TokenPayloadParam() tokenPayLoad: PayloadTokenDto
   ) {
 
-    console.log("ID user: ", req[REQUEST_TOKEN_PAYLOAD_KEY]?.sub)
+    console.log("Patload recebido", tokenPayLoad)
     return this.userService.upgrade(id, updateUserDto);
   }
 
