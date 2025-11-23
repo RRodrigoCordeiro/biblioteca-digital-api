@@ -27,6 +27,10 @@ model Book {
   description    String
   category       String
   publishedYear  Int
+  pages          Int    
+  assessment     Float   
+  Language       String  
+  imageUrl       String  @default("")
   available      Int
   createdAt      DateTime? @default(now())
   userId         Int?

@@ -24,6 +24,9 @@ export class BooksService {
       orderBy: {
         createdAt: 'desc',
       },
+      include: {
+        loans: true
+      }
     });
     return allBooks;
   }
@@ -37,15 +40,14 @@ export class BooksService {
 
     if (book?.title) return book;
 
-    throw new HttpException('Tarefa não foi encontrada',HttpStatus.NOT_FOUND);
+    throw new HttpException('Tarefa não foi encontrada', HttpStatus.NOT_FOUND);
 
     // //  throw new HttpException("Esse livro não existe",HttpStatus.NOT_FOUND)
     // // ir na documentação do moziila para pesquisar os status de respostas HTTP
     //  throw new NotFoundException("Essa tarefa não exite")
   }
 
-  async create(createBookDto: CreateBookDto,tokenPayLoad: PayloadTokenDto) {
-     
+  async create(createBookDto: CreateBookDto, tokenPayLoad: PayloadTokenDto) {
     try {
       const newBook = await this.prisma.book.create({
         data: {
@@ -55,6 +57,9 @@ export class BooksService {
           category: createBookDto.category,
           publishedYear: createBookDto.publishedYear,
           available: createBookDto.available,
+          pages: createBookDto.pages,
+          assessment: createBookDto.assessment,
+          Language: createBookDto.Language,
           userId: tokenPayLoad.sub,
         },
       });
@@ -62,7 +67,10 @@ export class BooksService {
       return newBook;
     } catch (err) {
       console.log(err);
-      throw new HttpException("Falha ao cadastrar livro", HttpStatus.BAD_REQUEST)
+      throw new HttpException(
+        'Falha ao cadastrar livro',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -85,12 +93,24 @@ export class BooksService {
         data: {
           author: updateBookDto.author ? updateBookDto.author : findBook.author,
           title: updateBookDto.title ? updateBookDto.title : findBook.title,
-          publishedYear: updateBookDto.publishedYear ? updateBookDto.publishedYear : findBook.publishedYear,
-          category: updateBookDto.category ? updateBookDto.category : findBook.category, 
-          available: updateBookDto.available ? updateBookDto.available : findBook.available,
-          description: updateBookDto.description ? updateBookDto.description : findBook.description,
-
-        }
+          publishedYear: updateBookDto.publishedYear
+            ? updateBookDto.publishedYear
+            : findBook.publishedYear,
+          category: updateBookDto.category
+            ? updateBookDto.category
+            : findBook.category,
+          available: updateBookDto.available
+            ? updateBookDto.available
+            : findBook.available,
+          description: updateBookDto.description
+            ? updateBookDto.description
+            : findBook.description,
+          pages: updateBookDto.pages ? updateBookDto.pages : findBook.pages,
+          Language: updateBookDto.Language
+            ? updateBookDto.Language
+            : findBook.Language,
+          assessment: updateBookDto.assessment ? updateBookDto.assessment : findBook.assessment
+        },
       });
 
       return book;

@@ -30,6 +30,7 @@ export class LoanService {
     await this.prisma.book.update({
       where: {
         id: createLoansDto.bookId,
+        
       },
       data: {
         available: { decrement: 1 },
