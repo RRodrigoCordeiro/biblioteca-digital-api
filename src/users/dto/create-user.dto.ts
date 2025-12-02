@@ -7,6 +7,10 @@ export class CreateUserDto{
 
   @IsEmail()
   email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  role: string
   
   @IsString()
   @IsNotEmpty()

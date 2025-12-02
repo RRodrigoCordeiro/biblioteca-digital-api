@@ -39,9 +39,14 @@ export class LoanService {
 
     return this.prisma.loan.create({
       data: {
-        userId: tokenPayLoad.sub,
+        userId: createLoansDto.userId,
         bookId: createLoansDto.bookId,
+      
       },
+      include: {
+        book: true,
+        user: true,
+      }
     });
   }
 

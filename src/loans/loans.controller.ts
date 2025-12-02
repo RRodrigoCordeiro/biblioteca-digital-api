@@ -31,7 +31,7 @@ export class LoanController {
     return this.loanService.createLoan(createLoansDto,tokenPayLoad);
   }
 
-  @Get('return/:id')
+  @Put('return/:id')
   @ApiOperation({ summary: 'Retornar um emprestimo' })
   @ApiParam({
     name: 'id',

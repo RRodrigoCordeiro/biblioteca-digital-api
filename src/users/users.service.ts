@@ -94,6 +94,8 @@ export class UsersService {
         },
         data: {
           name: dataUser.name,
+          email: updateUserDto.email ?? user.email,
+         
           passwordHash: dataUser?.passwordHash ? dataUser.passwordHash : user.passwordHash,
           
         },
@@ -101,6 +103,7 @@ export class UsersService {
           id: true,
           name: true,
           email: true,
+          role: true,
         },
       });
 
