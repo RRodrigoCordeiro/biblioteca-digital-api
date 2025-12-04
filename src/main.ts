@@ -12,6 +12,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
   }))
+    app.setGlobalPrefix('api');
+    
   const configSwagger = new DocumentBuilder()
   .setTitle("Biblioteca Digital")
   .setDescription("API de biblioteca digital.")
