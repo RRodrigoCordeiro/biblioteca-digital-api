@@ -44,7 +44,7 @@ model User{
   passwordHash String
   email        String @unique
   createdAt    DateTime? @default(now())
-  role         Role     @default(USERLIBRARIAN) 
+  role         Role    
   Book Book[]
   loans Loan[] 
 }

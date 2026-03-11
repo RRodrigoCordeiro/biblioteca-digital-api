@@ -50,6 +50,7 @@ export class UsersService {
         data: {
           name: createUserDto.name,
           email: createUserDto.email,
+          role: createUserDto.role,
           passwordHash: passwordHash,
         },
         select: {
